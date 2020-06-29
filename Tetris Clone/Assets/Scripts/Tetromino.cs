@@ -5,6 +5,8 @@ using UnityEngine;
 public class Tetromino : MonoBehaviour
 {
     private float fall = 0;
+    public bool allowRotation = true;
+    public bool limitRotation = false;
 
     public float fullspeed = 1;
 
@@ -24,43 +26,76 @@ public class Tetromino : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             transform.position += new Vector3(1, 0, 0);
-            if (!CheckIsValidPosition())
+            if (CheckIsValidPosition())
             {
-                transform.position += new Vector3(-1, 0,0);
-
             }
-
+            else
+            {
+                transform.position += new Vector3(-1, 0, 0);
+            }
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             transform.position += new Vector3(-1, 0, 0);
-            if (!CheckIsValidPosition())
+            if (CheckIsValidPosition())
             {
-                transform.position += new Vector3(1, 0,0);
-
             }
-
-
+            else
+            {
+                transform.position += new Vector3(1, 0, 0);
+            }
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            transform.Rotate(0, 0, 90);
-            if (!CheckIsValidPosition())
+            if (allowRotation)
             {
-                transform.position += new Vector3(0, 0,-90);
+                if (limitRotation)
+                {
+                    if (transform.rotation.eulerAngles.z >= 90)
+                    {
+                        transform.Rotate(0, 0, -90);
+                    }
+                    else
+                    {
+                        transform.Rotate(0, 0, 90);
+                    }
+                }
+                else
+                {
+                    transform.Rotate(0, 0, 90);
+                }
 
+                if (CheckIsValidPosition())
+                {
+                }
+                else
+                {
+                    if (limitRotation)
+                    {
+                        if (transform.rotation.eulerAngles.z >= 90)
+                        {
+                            transform.Rotate(0, 0, -90);
+                        }
+                        else
+                        {
+                            transform.Rotate(0, 0, 90);
+                        }
+                    }
+                    else
+                    {
+                        transform.Rotate(0, 0, -90);
+                    }
+                }
             }
-
-
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow) || Time.time - fall >= fullspeed)
         {
             transform.position += new Vector3(0, -1, 0);
             if (!CheckIsValidPosition())
             {
-                transform.position += new Vector3(0, 1,0);
-
+                transform.position += new Vector3(0, 1, 0);
             }
+
             fall = Time.time;
         }
     }
@@ -74,11 +109,8 @@ public class Tetromino : MonoBehaviour
             {
                 return false;
             }
-
         }
 
         return true;
     }
 }
-
-
