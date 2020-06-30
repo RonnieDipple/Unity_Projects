@@ -91,9 +91,15 @@ public class Tetromino : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.DownArrow) || Time.time - fall >= fullspeed)
         {
             transform.position += new Vector3(0, -1, 0);
-            if (!CheckIsValidPosition())
+            if (CheckIsValidPosition())
+            {
+
+            }
+            else
             {
                 transform.position += new Vector3(0, 1, 0);
+                enabled = false;
+                FindObjectOfType<Game>().SpawnNextTetromino();
             }
 
             fall = Time.time;
